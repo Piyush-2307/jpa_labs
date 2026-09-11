@@ -1,0 +1,60 @@
+package com.example.jap_labs.controller;
+
+import com.example.jap_labs.dto.*;
+import com.example.jap_labs.service.CustomerService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/customer")
+public class CustomerController {
+    private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService){
+        this.customerService = customerService;
+    }
+
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerResponse createCustomer(@Valid @RequestBody CreateCustomerRequest request){
+        return customerService.createCustomer(request);
+    }
+
+    @GetMapping
+    public List<CustomerResponse> findAll(){
+        return customerService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public CustomerResponse findById(@PathVariable Long id){
+        return customerService.findById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id){
+        customerService.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    public CustomerResponse updateById(@PathVariable Long id, @Valid @RequestBody UpdateCustomerRequest request){
+        return customerService.updateById(id, request);
+    }
+
+    @PatchMapping("/{id}/username")
+    public CustomerResponse updateUsername(@PathVariable Long id, @Valid @RequestBody UpdateCustomerUsernameRequest request){
+        return  customerService.updateUsername(id, request);
+    }
+
+    @PatchMapping("/{id}/email")
+    public CustomerResponse updateEmail(@PathVariable Long id, @Valid @RequestBody UpdateCustomerEmailRequest request){
+        return customerService.updateEmail(id, request);
+    }
+
+    @PatchMapping("/{id}/password")
+    public UpdatedCustomerPasswordResponse updatePassword(@PathVariable Long id, @Valid @RequestBody UpdateCustomerPasswordRequest request){
+        return customerService.updatePassword(id, request);
+    }
+}
