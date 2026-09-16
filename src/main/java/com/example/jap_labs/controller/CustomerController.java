@@ -1,6 +1,7 @@
 package com.example.jap_labs.controller;
 
 import com.example.jap_labs.dto.*;
+import com.example.jap_labs.enums.Gender;
 import com.example.jap_labs.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -48,13 +49,19 @@ public class CustomerController {
         return  customerService.updateUsername(id, request);
     }
 
-    @PatchMapping("/{id}/email")
-    public CustomerResponse updateEmail(@PathVariable Long id, @Valid @RequestBody UpdateCustomerEmailRequest request){
-        return customerService.updateEmail(id, request);
+    @PatchMapping("/{email}/email")
+    public CustomerResponse updateEmail(@PathVariable String email, @Valid @RequestBody UpdateCustomerEmailRequest request){
+        return customerService.updateEmail(email, request);
     }
 
     @PatchMapping("/{id}/password")
     public UpdatedCustomerPasswordResponse updatePassword(@PathVariable Long id, @Valid @RequestBody UpdateCustomerPasswordRequest request){
         return customerService.updatePassword(id, request);
     }
+
+    @GetMapping("/gender")
+    public List<CustomerResponse> findByGenderAndUsernameContainingIgnoreCaseOrderByUsernameAsc(@RequestParam(required = false) Gender gender, @RequestParam(required = false) String username){
+        return customerService.findByGenderAndUsernameContainingIgnoreCaseOrderByUsernameAsc(gender, username);
+    }
+
 }

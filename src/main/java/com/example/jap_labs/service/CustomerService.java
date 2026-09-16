@@ -2,6 +2,7 @@ package com.example.jap_labs.service;
 
 import com.example.jap_labs.dto.*;
 import com.example.jap_labs.entity.Customer;
+import com.example.jap_labs.enums.Gender;
 import com.example.jap_labs.mapper.CustomerMapper;
 import com.example.jap_labs.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
@@ -66,8 +67,8 @@ public class CustomerService {
         return customerMapper.toResponse(savedUsername);
     }
 
-    public CustomerResponse updateEmail(Long id, UpdateCustomerEmailRequest request){
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new RuntimeException("Customer"));
+    public CustomerResponse updateEmail(String email, UpdateCustomerEmailRequest request){
+        Customer customer = customerRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Customer"));
 
         customer.setEmail(request.getEmail());
 
@@ -91,5 +92,16 @@ public class CustomerService {
         Customer updatedCustomer = customerRepository.save(customer);
 
         return new UpdatedCustomerPasswordResponse("The password has been changed", updatedCustomer.getId(), updatedCustomer.getEmail(), LocalTime.now());
+    }
+
+
+    public List<CustomerResponse> findByGenderAndUsernameContainingIgnoreCaseOrderByUsernameAsc(Gender gender, String username){
+        List<Customer> customers = customerRepository.findByGenderAndUsernameContainingIgnoreCaseOrderByUsernameAsc(gender, username);
+        List<CustomerResponse> responses = new ArrayList<>();
+        for (Customer customer : customers){
+            CustomerResponse response = customerMapper.toResponse(customer);
+            responses.add(response);
+        }
+        return responses;
     }
 }
