@@ -94,14 +94,17 @@ public class CustomerService {
         return new UpdatedCustomerPasswordResponse("The password has been changed", updatedCustomer.getId(), updatedCustomer.getEmail(), LocalTime.now());
     }
 
-
-    public List<CustomerResponse> findByGenderAndUsernameContainingIgnoreCaseOrderByUsernameAsc(Gender gender, String username){
-        List<Customer> customers = customerRepository.findByGenderAndUsernameContainingIgnoreCaseOrderByUsernameAsc(gender, username);
+    public List<CustomerResponse> findByGenderAndUsername(Gender gender, String username){
+        List<Customer> customers = customerRepository.findByGenderAndUsername(gender, username);
         List<CustomerResponse> responses = new ArrayList<>();
         for (Customer customer : customers){
             CustomerResponse response = customerMapper.toResponse(customer);
             responses.add(response);
         }
         return responses;
+    }
+
+    public List<CustomerSummary> findUserSummaries(Gender gender){
+        return customerRepository.findUserSummaries(gender);
     }
 }

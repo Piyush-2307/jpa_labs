@@ -60,8 +60,12 @@ public class CustomerController {
     }
 
     @GetMapping("/gender")
-    public List<CustomerResponse> findByGenderAndUsernameContainingIgnoreCaseOrderByUsernameAsc(@RequestParam(required = false) Gender gender, @RequestParam(required = false) String username){
-        return customerService.findByGenderAndUsernameContainingIgnoreCaseOrderByUsernameAsc(gender, username);
+    public List<CustomerResponse> findByGenderAndUsername(@RequestParam(required = false) Gender gender, @RequestParam(required = false) String username){
+        return customerService.findByGenderAndUsername(gender, username);
     }
 
+    @GetMapping("/summery")
+    public List<CustomerSummary> findUserSummaries(@RequestParam(required = false) Gender gender){
+        return customerService.findUserSummaries(gender);
+    }
 }
