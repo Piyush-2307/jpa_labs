@@ -1,5 +1,6 @@
 package com.example.jap_labs.dto;
 
+import com.example.jap_labs.enums.Activity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,4 +14,5 @@ public class CustomerResponse {
     private Long id;
     private String username;
     private String email;
+    private Activity activity;
 }

@@ -2,9 +2,11 @@ package com.example.jap_labs.service;
 
 import com.example.jap_labs.dto.*;
 import com.example.jap_labs.entity.Customer;
+import com.example.jap_labs.enums.Activity;
 import com.example.jap_labs.enums.Gender;
 import com.example.jap_labs.mapper.CustomerMapper;
 import com.example.jap_labs.repository.CustomerRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -23,6 +25,7 @@ public class CustomerService {
 
     public CustomerResponse createCustomer(CreateCustomerRequest request){
         Customer customer = customerMapper.toEntity(request);
+        customer.setActivity(Activity.ONLINE);
         Customer savedCustomer = customerRepository.save(customer);
         return customerMapper.toResponse(savedCustomer);
     }
@@ -106,5 +109,22 @@ public class CustomerService {
 
     public List<CustomerSummary> findUserSummaries(Gender gender){
         return customerRepository.findUserSummaries(gender);
+    }
+
+    public Long countCustomers(){
+        return customerRepository.count();
+    }
+
+    public List<GenderCountResponse> countCustomerByGender(){
+        return customerRepository.countCustomerByGender();
+    }
+
+    @Transactional
+    public int offlineCustomers(Gender gender, Activity activity){
+        return customerRepository.offlineCustomers(gender, activity);
+    }
+
+    public ActivityStatusProjection updateActivityStatusNative(Long id, Activity activity){
+        return customerRepository.updateActivityStatusNative(id, activity.name());
     }
 }

@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomerMapper {
     public Customer toEntity(CreateCustomerRequest request){
-        return new Customer(request.getUsername(), request.getEmail(), request.getPassword(), request.getGender());
+        return new Customer(request.getUsername(), request.getEmail(), request.getPassword(), request.getGender(), request.getActivity());
     }
 
     public CustomerResponse toResponse(Customer customer){
-        return new CustomerResponse(customer.getId(), customer.getUsername(), customer.getEmail());
+        return new CustomerResponse(customer.getId(), customer.getUsername(), customer.getEmail(), customer.getActivity());
     }
 }

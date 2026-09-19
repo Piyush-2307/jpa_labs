@@ -1,12 +1,12 @@
 package com.example.jap_labs.dto;
 
+import com.example.jap_labs.enums.Activity;
 import com.example.jap_labs.enums.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -22,4 +22,6 @@ public class CreateCustomerRequest {
     private String password;
     @NotNull
     private Gender gender;
+
+    private Activity activity;
 }

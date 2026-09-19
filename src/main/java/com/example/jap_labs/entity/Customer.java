@@ -1,5 +1,6 @@
 package com.example.jap_labs.entity;
 
+import com.example.jap_labs.enums.Activity;
 import com.example.jap_labs.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,10 +31,15 @@ public class Customer {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    public Customer(String username, String email, String password, Gender gender){
+    @Column(name = "activity")
+    @Enumerated(EnumType.STRING)
+    private Activity activity;
+
+    public Customer(String username, String email, String password, Gender gender, Activity activity){
         this.username = username;
         this.email = email;
         this.password = password;
         this.gender = gender;
+        this.activity = activity;
     }
 }

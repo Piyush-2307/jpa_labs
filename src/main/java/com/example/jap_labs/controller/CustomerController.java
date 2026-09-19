@@ -1,6 +1,7 @@
 package com.example.jap_labs.controller;
 
 import com.example.jap_labs.dto.*;
+import com.example.jap_labs.enums.Activity;
 import com.example.jap_labs.enums.Gender;
 import com.example.jap_labs.service.CustomerService;
 import jakarta.validation.Valid;
@@ -67,5 +68,25 @@ public class CustomerController {
     @GetMapping("/summery")
     public List<CustomerSummary> findUserSummaries(@RequestParam(required = false) Gender gender){
         return customerService.findUserSummaries(gender);
+    }
+
+    @GetMapping("/count")
+    public String countCustomer(){
+        return "Total customers are = " + customerService.countCustomers();
+    }
+
+    @GetMapping("countByGender")
+    public List<GenderCountResponse> countCustomerByGender(){
+        return customerService.countCustomerByGender();
+    }
+
+    @PatchMapping("/activity")
+    public int offlineCustomers(@RequestParam(required = false) Gender gender, @RequestParam(required = false) Activity activity){
+        return customerService.offlineCustomers(gender, activity);
+    }
+
+    @PatchMapping("/activityNative/{id}")
+    public ActivityStatusProjection updateActivityStatusNative(@PathVariable Long id,@RequestParam(required = false) Activity activity){
+        return customerService.updateActivityStatusNative(id, activity);
     }
 }
