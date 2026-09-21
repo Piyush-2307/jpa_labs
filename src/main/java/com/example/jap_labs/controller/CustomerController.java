@@ -5,6 +5,9 @@ import com.example.jap_labs.enums.Activity;
 import com.example.jap_labs.enums.Gender;
 import com.example.jap_labs.service.CustomerService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +28,14 @@ public class CustomerController {
         return customerService.createCustomer(request);
     }
 
-    @GetMapping
-    public List<CustomerResponse> findAll(){
-        return customerService.findAll();
+    @GetMapping()
+    public Page<CustomerResponse> findAll(Pageable pageable){
+        return customerService.findAll(pageable);
+    }
+
+    @GetMapping("/feed")
+    public Slice<CustomerResponse> findBy(Pageable pageable){
+        return customerService.findBy(pageable);
     }
 
     @GetMapping("/{id}")

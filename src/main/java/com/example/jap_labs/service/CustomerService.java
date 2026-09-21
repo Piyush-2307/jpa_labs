@@ -4,9 +4,13 @@ import com.example.jap_labs.dto.*;
 import com.example.jap_labs.entity.Customer;
 import com.example.jap_labs.enums.Activity;
 import com.example.jap_labs.enums.Gender;
+import com.example.jap_labs.exception.CustomerNotFoundException;
 import com.example.jap_labs.mapper.CustomerMapper;
 import com.example.jap_labs.repository.CustomerRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -30,19 +34,29 @@ public class CustomerService {
         return customerMapper.toResponse(savedCustomer);
     }
 
-    public List<CustomerResponse> findAll(){
-        List<Customer> customerList = customerRepository.findAll();
-        List<CustomerResponse> responses = new ArrayList<>();
-        for (Customer customer : customerList){
-            CustomerResponse response = customerMapper.toResponse(customer);
-            responses.add(response);
-        }
-        return responses;
+    public Page<CustomerResponse> findAll(Pageable pageable){
+//        Page<Customer> customerList = customerRepository.findAll(pageable);
+//        List<CustomerResponse> responses = new ArrayList<>();
+//        for (Customer customer : customerList){
+//            CustomerResponse response = customerMapper.toResponse(customer);
+//            responses.add(response);
+//        }
+        return customerRepository
+                .findAll(pageable)
+                .map(customerMapper::toResponse);
+    }
+
+    public Slice<CustomerResponse> findBy(Pageable pageable){
+//        return customerMapper.toResponse(map(customerRepository.findBy(pageable)));
+        return customerRepository
+                .findBy(pageable)
+                .map(customerMapper::toResponse);
     }
 
     public CustomerResponse findById(Long id){
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new RuntimeException("Customer not found"));
-        return customerMapper.toResponse(customer);
+//        Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
+//        return customerMapper.toResponse(customer);
+        return customerMapper.toResponse(customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id)));
     }
 
     public void deleteById(Long id){
@@ -50,7 +64,7 @@ public class CustomerService {
     }
 
     public CustomerResponse updateById(Long id, UpdateCustomerRequest request){
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new RuntimeException("Customer not found"));
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
 
         customer.setUsername(request.getUsername());
         customer.setEmail(request.getEmail());
@@ -62,7 +76,7 @@ public class CustomerService {
     }
 
     public CustomerResponse updateUsername(Long id, UpdateCustomerUsernameRequest request){
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new RuntimeException("Customer not found"));
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
         customer.setUsername(request.getUsername());
 
         Customer savedUsername = customerRepository.save(customer);
@@ -71,7 +85,7 @@ public class CustomerService {
     }
 
     public CustomerResponse updateEmail(String email, UpdateCustomerEmailRequest request){
-        Customer customer = customerRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Customer"));
+        Customer customer = customerRepository.findByEmail(email).orElseThrow(() -> new CustomerNotFoundException(email));
 
         customer.setEmail(request.getEmail());
 
@@ -81,7 +95,7 @@ public class CustomerService {
     }
 
     public UpdatedCustomerPasswordResponse updatePassword(Long id, UpdateCustomerPasswordRequest request){
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new RuntimeException("Customer not found"));
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
 
         String password = request.getPassword();
         String confirmPassword = request.getConfirmPassword();

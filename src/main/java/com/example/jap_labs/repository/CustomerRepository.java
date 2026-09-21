@@ -6,6 +6,8 @@ import com.example.jap_labs.dto.GenderCountResponse;
 import com.example.jap_labs.entity.Customer;
 import com.example.jap_labs.enums.Activity;
 import com.example.jap_labs.enums.Gender;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -76,6 +78,8 @@ WHERE c.gender = :gender
                 activity AS activity
 """, nativeQuery = true)
     ActivityStatusProjection updateActivityStatusNative(@Param("id") Long id, @Param("activity") String activity);
+
+    Slice<Customer> findBy(Pageable pageable);
 
 //    List<Customer> findByGenderAndUsernameContainingIgnoreCaseOrderByUsernameAsc(Gender gender, String username);
 }
