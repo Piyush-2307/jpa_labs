@@ -7,10 +7,13 @@ import com.example.jap_labs.enums.Gender;
 import com.example.jap_labs.exception.CustomerNotFoundException;
 import com.example.jap_labs.mapper.CustomerMapper;
 import com.example.jap_labs.repository.CustomerRepository;
+import com.example.jap_labs.utilities.PageableUtility;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -111,18 +114,17 @@ public class CustomerService {
         return new UpdatedCustomerPasswordResponse("The password has been changed", updatedCustomer.getId(), updatedCustomer.getEmail(), LocalTime.now());
     }
 
-    public List<CustomerResponse> findByGenderAndUsername(Gender gender, String username){
-        List<Customer> customers = customerRepository.findByGenderAndUsername(gender, username);
-        List<CustomerResponse> responses = new ArrayList<>();
-        for (Customer customer : customers){
-            CustomerResponse response = customerMapper.toResponse(customer);
-            responses.add(response);
-        }
-        return responses;
+    public Page<CustomerResponse> findByGenderAndUsername(Gender gender, String username, Pageable pageable){
+
+        pageable = PageableUtility.sanitize(pageable);
+
+        return customerRepository
+                .findByGenderAndUsername(gender, username, pageable)
+                .map(customerMapper::toResponse);
     }
 
-    public List<CustomerSummary> findUserSummaries(Gender gender){
-        return customerRepository.findUserSummaries(gender);
+    public Page<CustomerSummary> findUserSummaries(Gender gender, Pageable pageable){
+        return customerRepository.findUserSummaries(gender, pageable);
     }
 
     public Long countCustomers(){

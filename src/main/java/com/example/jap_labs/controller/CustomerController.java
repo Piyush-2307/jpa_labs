@@ -6,8 +6,10 @@ import com.example.jap_labs.enums.Gender;
 import com.example.jap_labs.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,13 +71,13 @@ public class CustomerController {
     }
 
     @GetMapping("/gender")
-    public List<CustomerResponse> findByGenderAndUsername(@RequestParam(required = false) Gender gender, @RequestParam(required = false) String username){
-        return customerService.findByGenderAndUsername(gender, username);
+    public Page<CustomerResponse> findByGenderAndUsername(@RequestParam(required = false) Gender gender, @RequestParam(required = false) String username,@PageableDefault(page = 0, size = 2, sort = "username") Pageable pageable){
+        return customerService.findByGenderAndUsername(gender, username, pageable);
     }
 
     @GetMapping("/summery")
-    public List<CustomerSummary> findUserSummaries(@RequestParam(required = false) Gender gender){
-        return customerService.findUserSummaries(gender);
+    public Page<CustomerSummary> findUserSummaries(@RequestParam(required = false) Gender gender, Pageable pageable){
+        return customerService.findUserSummaries(gender, pageable);
     }
 
     @GetMapping("/count")

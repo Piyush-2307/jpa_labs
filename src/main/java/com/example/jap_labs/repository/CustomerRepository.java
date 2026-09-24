@@ -6,6 +6,7 @@ import com.example.jap_labs.dto.GenderCountResponse;
 import com.example.jap_labs.entity.Customer;
 import com.example.jap_labs.enums.Activity;
 import com.example.jap_labs.enums.Gender;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,7 +29,7 @@ SELECT c
    AND LOWER(c.username)
     LIKE LOWER(CONCAT('%', :username,'%'))
 """)
-    List<Customer> findByGenderAndUsername(Gender gender, String username);
+    Page<Customer> findByGenderAndUsername(Gender gender, String username, Pageable pageable);
 
     @Query("""
 SELECT new com.example.jap_labs.dto.CustomerSummary(
@@ -38,7 +39,7 @@ SELECT new com.example.jap_labs.dto.CustomerSummary(
 FROM Customer c
 WHERE c.gender = :gender
 """)
-    List<CustomerSummary> findUserSummaries(@Param("gender")Gender gender);
+    Page<CustomerSummary> findUserSummaries(@Param("gender")Gender gender, Pageable pageable);
 
 //    @Query("""
 //SELECT COUNT(c)
