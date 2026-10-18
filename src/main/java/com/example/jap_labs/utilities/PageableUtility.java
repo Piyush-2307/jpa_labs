@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 public final class PageableUtility {
     private final static int MAX_SIZE = 100;
 
-    private PageableUtility(){}
+    private PageableUtility(){};
 
     public static Pageable sanitize(Pageable pageable){
 

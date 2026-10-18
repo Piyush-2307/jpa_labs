@@ -67,7 +67,7 @@ UPDATE Customer c
 SET c.activity = :activity
 WHERE c.gender = :gender
 """)
- int offlineCustomers(Gender gender, Activity activity);
+    int offlineCustomers(Gender gender, Activity activity);
 
     @Query(value = """
         UPDATE customers
